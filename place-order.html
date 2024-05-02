@@ -19,6 +19,8 @@
             </nav>
         </header>
     </body>
+    <h1>Order Summary</h1>
+    <div id="deliveryInfo"></div>
     <h2>Order Details</h2>
     <table>
         <tr>
@@ -30,8 +32,8 @@
             <td>$25</td>
         </tr>
         <tr>
-            <td>Discount (if logged in)</td>
-            <td id="discount">-$10</td>
+            <td>Discount</td>
+            <td>-$10</td>
         </tr>
         <tr>
             <td>Tax</td>
@@ -42,12 +44,12 @@
             <td id="total"></td>
         </tr>
     </table>
+    <button onclick="placeOrder()">Place Order</button>
     <script src="configuration.js"></script>
     <script>
         const cartIcon = document.getElementById('cart');
         let cartCount = localStorage.getItem('cartCount') || 0;
 
-        document.getElementById('flower-type').addEventListener('change', handleFlowerSelection);
         updateCartCount();
 
         function updateCartCount() {
@@ -55,22 +57,25 @@
         }
 
         const deliveryInfo = JSON.parse(localStorage.getItem('deliveryInfo'));
+        const deliveryInfoFormatted = document.getElementById('deliveryInfo');
         const date = localStorage.getItem('date');
 
-        deliveryInfoDiv.innerHTML = `
+        deliveryInfoFormatted.innerHTML = `
             <p>Delivery Date: ${date}</p>
-            <p>Item Price: ${$50}<p>
+            <p>Item Price: $50<p>
             <p>Name: ${deliveryInfo.firstName} ${deliveryInfo.lastName}</p>
             <p>Address: ${deliveryInfo.address}
             <p>Apt: ${deliveryInfo.apt}, ${deliveryInfo.city}, ${deliveryInfo.state}, ${deliveryInfo.zip}</p>
         `;
 
+        const subtotal = 50;
+        const deliveryFee = -25;
+
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const discount = isLoggedIn ? -10 : 0;
 
-        const total = 50 - 25 + discount;
+        const total = subtotal + deliveryFee + discount;
 
-        document.getElementById('discount').textContent = `$${discount}`;
         document.getElementById('total').textContent = `$${total}`;
 
         function placeOrder() {
