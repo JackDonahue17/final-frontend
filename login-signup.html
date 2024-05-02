@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="navbar.css">
+        <link rel="stylesheet" href="register.css">
+        <title>Registration</title>
+    </head>
+<body>
+<ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="track-order.html">Track Order</a></li>
+    <li><a href="login-signup.html">Account</a></li>
+</ul>
+<div>Help</div>
+<div id="cart">Cart 0</div>
+</ul>
+
+<form  id="signup" class="tabcontent">
+    <h1>Sign Up</h1>
+    <hr>
+
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" id="email" required>
+
+    <label for="password"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" id="password" required>
+
+    <div class="clearfix">
+      <button type="button" onclick="signup()" class="signupbtn">Create An Account</button>
+    </div>
+</form>
+
+<form id="login" class="tabcontent">
+    <h1>Login</h1>
+    <hr>
+
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" id="email" required>
+
+    <label for="password"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" id="password" required>
+
+    <div class="clearfix">
+        <button type="button" onclick="login()" class="loginbtn">Login</button>
+    </div>
+</form>
+
+<script src="register.js"></script>
+<script src="configuration.js"></script>
+<script>
+    const mode = 0;
+
+    const host_local = "http://localhost:8080"
+    const host_remote = "https://flowers-???.onrender.com";
+
+    function getHost() {
+        return (mode == 0) ? host_local : host_remote;
+    }
+
+    function isLoggedIn() {
+        if(localStorage.getItem("token")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function getTheToken() {
+        return localStorage.getItem("token");
+    }
+
+    function saveTheToken(token) {
+        localStorage.setItem("token", token);
+        updateTheNavigationBar();
+    }
+
+    function removeTheToken() {
+        localStorage.removeItem("token");
+        updateTheNavigationBar();
+    }
+
+    let configuration = {
+        isLoggedIn: () => isLoggedIn(),
+        host: () => getHost(),
+        token: () => getTheToken()
+    };
+
+    const cartIcon = document.getElementById('cart');
+    let cartCount = localStorage.getItem('cartCount') || 0;
+
+    updateCartCount();
+
+    function updateCartCount() {
+        cartIcon.textContent = `Cart ${cartCount}`;
+    }
+
+    async function login() {
+        let username = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let customer = {email: email, password: password}
+        let request = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(customer)
+        };
+        try {
+            let response = await fetch(getHost() + "/signin", request);
+            if(response.status == 200) {
+                alert("The login was successful!");
+                const token = await response.text();
+                saveTheToken(token);
+                localStorage.setItem(isLoggedIn, true);
+                location.href = "index.html";
+            } else {
+                console.log('response status:${response.status}');
+                removeTheToken();
+                alert("Something went wrong");
+            }
+        } catch(error) {
+            console.log(error);
+            removeTheToken();
+            alert("Something went wrong");
+        }
+    }
+
+    async function signup() {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let customer = {email:email, password: password}
+        let request = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(customer)
+        };
+        try {
+            let response = await fetch(getHost() + "/signup", request);
+            if(response.status == 200) {  
+                alert("The registration was successful!")
+                location.href = "index.html";
+
+            } else {
+                console.log(`response status:${response.status}`);            
+                alert("Something went wrong!");
+            }
+        }
+        catch(error) {
+            console.log(error);        
+            alert("Something went wrong!");
+        }    
+    }
+</script>
+</body>
+</html>

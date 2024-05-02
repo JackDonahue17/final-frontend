@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Flower Shop</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="login-signup.html">Account</a></li>
+                </ul>
+                <div>Help</div>
+                <div id="cart">Cart 0</div>
+            </nav>
+        </header>
+        <main>
+            <section id="filters">
+                <label for="flower-type">Flower Type</label>
+                <select id="flower-type">
+                    <option>Mixed</option>
+                    <option>Rose</option>
+                    <option>Lily</option>
+                    <option>Tulip</option>
+                    <option>Daisy</option>
+                </select>
+                <label for="occasion">Occasion</label>
+                <select id="occasion">
+                    <option>Mother's Day</option>
+                    <option>Birthday</option>
+                    <option>Thank You</option>
+                </select>
+                <label for="color">Color</label>
+                <select id="color">
+                    <option>Mixed</option>
+                    <option>Red</option>
+                    <option>Yellow</option>
+                    <option>Green</option>
+                    <option>Orange</option>
+                </select>
+                <label for="sort">Sort</label>
+                <select id="sort">
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                </select>
+            </section>
+            <section id="flowers">
+                <button onclick="navigateToAddToBasket('mixed')">Mixed Flowers</button>
+                <button onclick="navigateToAddToBasket('rose')">Rose</button>
+                <button onclick="navigateToAddToBasket('lily')">Lily</button>
+                <button onclick="navigateToAddToBasket('tulip')">Tulip</button>
+                <button onclick="navigateToAddToBasket('daisy')">Daisy</button>
+            </section>
+        
+        </main>
+
+        <script src="configuration.js"></script>
+        <script>
+            const cartIcon = document.getElementById('cart');
+            let cartCount = localStorage.getItem('cartCount') || 0;
+
+            updateCartCount();
+
+            function updateCartCount() {
+                cartIcon.textContent = `Cart ${cartCount}`;
+            }
+
+            function navigateToAddToBasket(flower) {
+                window.location.href = 'add-to-basket.html?flower=${flower}';
+            }
+        </script>
+    </body>
+</html>

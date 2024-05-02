@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Order Status</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="track-order.html">Track Order</a></li>
+            <li><a href="login-signup.html">Account</a></li>
+        </ul>
+        <div>Help</div>
+        <div id="cart">Cart 0</div>
+    </nav>
+</header>
+<h2>Order Details</h2>
+<table id="orderDetails">
+</table>
+
+<script src="configuration.js"></script>
+<script>
+    const cartIcon = document.getElementById('cart');
+    let cartCount = localStorage.getItem('cartCount') || 0;
+
+    updateCartCount();
+
+    function updateCartCount() {
+        cartIcon.textContent = `Cart ${cartCount}`;
+    }
+
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+        window.location.href = 'login-signup.html';
+    } else {
+        const orders = JSON.parse(localStorage.getItem('orders'));
+
+        if (orders && orders.length > 0) {
+            const orderTable = document.getElementById('orderDetails');
+
+            orders.forEach(order => {
+                const row = orderTable.insertRow();
+
+                row.innerHTML = `
+                    <td>${order.flower}</td>
+                    <td>$${order.total}</td>
+                    <td>${order.firstName} ${order.lastName}</td>
+                    <td>${order.status}</td>
+                `;
+            });
+        }
+    }
+</script>
+</body>
+</html>

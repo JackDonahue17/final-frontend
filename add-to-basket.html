@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="track-order.html">Track Order</a></li>
+            <li><a href="login-signup.html">Account</a></li>
+        </ul>
+        <div>Help</div>
+        <div id="cart">Cart 0</div>
+    </nav>
+</header>
+<main>
+    <h1>Add to Basket</h1>
+    <form id="addToBasketForm">
+        <label>Delivery Date:</label>
+        <input type="date" id="date" name="deliveryDate" required><br><br>
+        
+        <label>Purchase Option:</label>
+        <select name="purchaseOption" required>
+            <option>Start a Subscription</option>
+            <option>One Time Purchase</option>
+        </select><br><br>
+        
+        <button type="submit">Add to Basket</button>
+    </form>
+</main>
+
+<script src="configuration.js"></script>
+<script>
+    const cartIcon = document.getElementById('cart');
+    let cartCount = localStorage.getItem('cartCount') || 0;
+
+    updateCartCount();
+
+    function updateCartCount() {
+        cartIcon.textContent = `Cart ${cartCount}`;
+        localStorage.setItem('cartCount', cartCount);
+    }
+
+    const addToBasketForm = document.getElementById('addToBasketForm');
+    addToBasketForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const flower = new URLSearchParams(window.location.search).get('flower');
+
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === true;
+
+        if(cartCount == 0) {
+            cartCount++;
+        }
+        updateCartCount();
+
+        localStorage.setItem('flower', flower);
+
+        const date = document.getElementById('date');
+        localStorage.setItem('date', date)
+
+        if(isLoggedIn) {
+            window.location.href = 'delivery-info-logged-in.html';
+        } else {
+            window.location.href = 'delivery-info.html';
+        }
+    });
+</script>
+</body>
+</html>
